@@ -1,0 +1,46 @@
+body {
+	font-family: 'DEC Terminal Modern';
+	background-color: rgb(40, 40, 40);
+	background: rgb(40, 40, 40),
+		linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+	color: rgba(51, 255, 0, 1);
+	text-shadow:
+		0 0 0.5rem rgba(51, 255, 0, 1),
+		2px 0 1px rgba(0, 0, 255, 1),
+		-1px 0 1px rgba(255, 0, 0, 1);
+	margin: 0;
+	height: 100vh;
+}
+
+.h {
+	&-vh-100 {
+		height: 100vh;
+	}
+}
+
+.flex {
+	display: flex;
+
+	&-column {
+		flex-direction: column;
+	}
+
+	&-center {
+		justify-content: center;
+		align-items: center;
+	}
+
+	&-space-between {
+		justify-content: space-between;
+	}
+
+	&-direction {
+		&-row {
+			flex-direction: row;
+		}
+
+		&-column {
+			flex-direction: column;
+		}
+	}
+}
