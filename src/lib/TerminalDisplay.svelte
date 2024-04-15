@@ -5,6 +5,12 @@
 
 <div>
 	{#each TerminalBuffer as line, i}
-		<p>{prompt}{line}</p>
+		<pre>{prompt}{line}</pre>
 	{/each}
 </div>
+
+<style>
+	pre {
+		margin: 0;
+	}
+</style>

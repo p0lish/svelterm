@@ -1,0 +1,9 @@
+<script>
+	import AppTerminals from '$lib/AppTerminals.svelte';
+	import Scanlines from '$lib/Scanlines.svelte';
+	import 'styles/global.scss';
+	import 'styles/scp.scss';
+</script>
+
+<Scanlines />
+<AppTerminals />

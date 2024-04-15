@@ -5,46 +5,63 @@
 
 	let inputRef = null;
 	let terminalInputBuffer = '';
-	let prompt = 'root@localhost:~$> ';
+	export let prompt = 'root@localhost:~$> ';
 	let cursor = '|';
 	let TerminalBuffer = [];
 
 	const resetTerminalInputBuffer = () => {
+		window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: 'smooth' });
 		terminalInputBuffer = ``;
 	};
 
 	const commands = {
-		enter: () => {
+		Enter: () => {
 			TerminalBuffer = [...TerminalBuffer, terminalInputBuffer];
+			if (!commandLineInterCeptor(terminalInputBuffer)) {
+				TerminalBuffer = [...TerminalBuffer, `command not found: ${terminalInputBuffer}`];
+			}
 			resetTerminalInputBuffer();
 		},
-		backspace: () => {
+		Backspace: () => {
 			terminalInputBuffer = terminalInputBuffer.slice(0, -1);
 		},
-		tab: () => {
+		Tab: () => {
 			terminalInputBuffer += '    ';
 		},
-		alt: () => {
+		Alt: () => {
+			return null;
+		},
+		Control: () => {
 			return null;
 		}
 	};
 
-	const commandKey = [
-		...new Set([
-			'Enter',
-			'Backspace',
-			'ArrowLeft',
-			'ArrowRight',
-			'ArrowUp',
-			'ArrowDown',
-			'Tab',
-			'Alt'
-		])
-	];
+	const TerminalCommands = {
+		ls: () => {
+			TerminalBuffer = [...TerminalBuffer, 'Desktop Documents Downloads Music Pictures Videos'];
+		},
+		clear: () => {
+			TerminalBuffer = [];
+		},
+		help: () => {
+			TerminalBuffer = [...TerminalBuffer, 'scp - load scp database terminal'];
+		},
+		scp: () => {
+			location.href = '/scp-db';
+		}
+	};
 
 	const keyPressInterceptor = (e) => {
-		if (commandKey.includes(e.key)) {
-			commands[`${e.key}`.toLowerCase()]();
+		if (Object.keys(commands).includes(e.key)) {
+			commands[e.key]();
+			return true;
+		}
+		return false;
+	};
+
+	const commandLineInterCeptor = (input) => {
+		if (Object.keys(TerminalCommands).includes(input)) {
+			TerminalCommands[input]();
 			return true;
 		}
 		return false;
@@ -62,13 +79,13 @@
 	};
 
 	onMount(() => {
-		inputRef.focus();
+		catchFocus();
 		resetTerminalInputBuffer();
 	});
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div on:click={catchFocus} on:focus={catchFocus}>
+<div class="display" on:click={catchFocus} on:focus={catchFocus}>
 	<div>
 		<TerminalDisplay bind:TerminalBuffer />
 	</div>
@@ -82,3 +99,9 @@
 		/>
 	</div>
 </div>
+
+<style lang="scss">
+	.display {
+		margin: 1rem;
+	}
+</style>

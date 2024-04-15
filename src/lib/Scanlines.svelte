@@ -1,0 +1,48 @@
+<div class="scanlines" inert></div>
+
+<style lang="scss">
+	.scanlines {
+		pointer-events: none;
+		top: 0;
+		bottom: 0;
+		position: fixed;
+		overflow: hidden;
+		width: 100%;
+		&:before,
+		&:after {
+			display: block;
+			pointer-events: none;
+			content: '';
+			position: absolute;
+		}
+		&:before {
+			width: 100%;
+			height: 3px;
+			z-index: 2147483649;
+			background: rgba(0, 0, 0, 0.3);
+			opacity: 0.75;
+			-webkit-animation: scanline 6s linear infinite;
+			animation: scanline 6s linear infinite;
+		}
+		&:after {
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 2147483648;
+			background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.2) 50%);
+			background-size: 100% 4px;
+			animation: scanlines 10s steps(60) infinite;
+		}
+		@keyframes scanline {
+			0% {
+				transform: translate3d(0, 200000%, 0);
+			}
+		}
+		@keyframes scanlines {
+			100% {
+				background-position: 0 50%;
+			}
+		}
+	}
+</style>
