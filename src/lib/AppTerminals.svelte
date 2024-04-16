@@ -10,8 +10,10 @@
 	export let prompt = 'scp-db:~>';
 	let cursor = '|';
 	let TerminalBuffer = ['Welcome to the [SCP] database type help for a list of commands'];
-	let content = '';
+	let content = {};
+	let scpItem = undefined;
 	let selected_index = 0;
+	$: contentKeys = Object.keys(content);
 
 	const resetTerminalInputBuffer = () => {
 		terminalInputBuffer = ``;
@@ -19,12 +21,13 @@
 
 	const commands = {
 		Enter: () => {
-			if (content.length > 0 && selected_index >= 0) {
-				terminalInputBuffer = `content ${content[selected_index]}`;
+			if (contentKeys.length > 0 && selected_index >= 0) {
+				terminalInputBuffer = `content ${contentKeys[selected_index]}`;
 			}
 
 			const command = terminalInputBuffer.split(' ')[0];
 			const params = terminalInputBuffer.split(' ').slice(1);
+			console.log('params', content[params[0]]);
 
 			if (!commandLineInterCeptor(command, params)) {
 				TerminalBuffer = [`command not found: ${terminalInputBuffer}`];
@@ -45,30 +48,35 @@
 			return null;
 		},
 		ArrowUp: () => {
-			selected_index = selected_index - 1 < 0 ? content.length - 1 : selected_index - 1;
+			selected_index = selected_index - 1 < 0 ? contentKeys.length - 1 : selected_index - 1;
 		},
 		ArrowDown: () => {
-			selected_index = selected_index + 1 > content.length - 1 ? 0 : selected_index + 1;
+			selected_index = selected_index + 1 > contentKeys.length - 1 ? 0 : selected_index + 1;
 		}
 	};
 
 	const TerminalCommands = {
 		clear: (params) => {
 			TerminalBuffer = [];
-			content = [];
+			content = {};
 		},
 		help: (params) => {
 			TerminalBuffer = ['scp - load scp database terminal'];
 		},
 		content: (params) => {
-			getData('/scp-db/api/content').then((data) => {
+			let file = 'content_index.json';
+			if (params.length > 0) {
+				file = `${content[params[0]]}`;
+			}
+			getData(`/scp-db/api/${file}`).then((data) => {
 				TerminalBuffer = ['Loading list'];
-				console.log(params);
-				if (params.length > 0) {
-				} else {
-					content = Object.keys(data);
-				}
+				content = data;
 			});
+		},
+		load: (params) => {
+			console.log('params', params);
+			const SCP_Name = params[0].toUpperCase();
+			scpItem = content[SCP_Name];
 		}
 	};
 
@@ -113,7 +121,7 @@
 		<TerminalDisplay bind:TerminalBuffer />
 	</section>
 	<div>
-		<ContentLoader bind:content bind:index={selected_index} />
+		<ContentLoader bind:content bind:scpItem bind:index={selected_index} />
 	</div>
 	<section class="glow">
 		<TerminalInput
