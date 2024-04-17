@@ -166,7 +166,13 @@
 	<content class="height-90vh overflow-y-auto">
 		<ContentLoader bind:content bind:scpItem bind:index={selected_index} />
 	</content>
-	<section class="glow fixed fixed-bottom width-100">
+	<section
+		tabindex="-1"
+		role="button"
+		on:keydown
+		on:click={catchFocus}
+		class="glow fixed fixed-bottom width-100"
+	>
 		<TerminalDisplay bind:TerminalBuffer />
 		<TerminalInput
 			bind:cursor
