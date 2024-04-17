@@ -39,14 +39,9 @@
 		text-align: center;
 	}
 	ul {
-		height: 50%;
 		list-style-type: none;
 		padding: 0;
 		margin: 0;
-		width: 50%;
-		overflow: hidden;
-		overflow-y: auto;
-		height: 50vh;
 	}
 	li {
 		padding: 0.5rem;
@@ -63,9 +58,12 @@
 	}
 	#page {
 		margin: 1rem;
-		width: 50%;
-		height: 80%;
-
+		width: 90%;
+		overflow-y: auto;
 		text-align: justify;
+	}
+
+	h1 {
+		margin: 2rem;
 	}
 </style>
