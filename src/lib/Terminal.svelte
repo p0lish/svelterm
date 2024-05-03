@@ -2,15 +2,22 @@
 	import { onMount } from 'svelte';
 	import TerminalDisplay from './TerminalDisplay.svelte';
 	import TerminalInput from './TerminalInput.svelte';
-
+	import Scanlines from './Scanlines.svelte';
+	import chanCommands from '../utils/chanCommands';
 	let inputRef = null;
 	let terminalInputBuffer = '';
-	export let prompt = 'root@localhost:~$> ';
+	export let prompt = 'web@terminal:~$> ';
 	let cursor = '|';
+	/**
+	 * @type {string[]}
+	 */
 	let TerminalBuffer = [];
+	let commandHistory = [];
+	let scanlinesOn = false;
+	$: historyPointer = commandHistory.length;
 
 	const resetTerminalInputBuffer = () => {
-		window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: 'smooth' });
+		// window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: 'smooth' });
 		terminalInputBuffer = ``;
 	};
 
@@ -18,7 +25,11 @@
 		Enter: () => {
 			TerminalBuffer = [...TerminalBuffer, terminalInputBuffer];
 			if (!commandLineInterCeptor(terminalInputBuffer)) {
-				TerminalBuffer = [...TerminalBuffer, `command not found: ${terminalInputBuffer}`];
+				if (terminalInputBuffer.length < 1) {
+					TerminalBuffer = [...TerminalBuffer, prompt];
+				} else {
+					TerminalBuffer = [...TerminalBuffer, `command not found: ${terminalInputBuffer}`];
+				}
 			}
 			resetTerminalInputBuffer();
 		},
@@ -33,26 +44,43 @@
 		},
 		Control: () => {
 			return null;
+		},
+		ArrowUp: () => {
+			console.log('commandHistory', commandHistory);
+			historyPointer = historyPointer - 1 < 0 ? 0 : historyPointer - 1;
+			if (commandHistory[historyPointer]) terminalInputBuffer = commandHistory[historyPointer];
+			console.log('historyPointer', historyPointer);
+		},
+		ArrowDown: () => {
+			console.log('commandHistory', commandHistory);
+			historyPointer =
+				historyPointer + 1 > commandHistory.length ? commandHistory.length : historyPointer + 1;
+			if (commandHistory[historyPointer]) terminalInputBuffer = commandHistory[historyPointer];
+			console.log('historyPointer', historyPointer);
 		}
 	};
 
 	const TerminalCommands = {
+		...chanCommands,
 		ls: () => {
 			TerminalBuffer = [...TerminalBuffer, 'Desktop Documents Downloads Music Pictures Videos'];
 		},
 		clear: () => {
 			TerminalBuffer = [];
 		},
-		help: () => {
-			TerminalBuffer = [...TerminalBuffer, 'scp - load scp database terminal'];
-		},
-		scp: () => {
-			location.href = '/scp-db';
+		scanlines: () => {
+			scanlinesOn = !scanlinesOn;
 		}
 	};
 
+	/**
+	 * Description
+	 * @param {KeyboardEvent} e
+	 * @returns {boolean}
+	 */
 	const keyPressInterceptor = (e) => {
 		if (Object.keys(commands).includes(e.key)) {
+			e.preventDefault();
 			commands[e.key]();
 			return true;
 		}
@@ -61,6 +89,7 @@
 
 	const commandLineInterCeptor = (input) => {
 		if (Object.keys(TerminalCommands).includes(input)) {
+			commandHistory.push(input);
 			TerminalCommands[input]();
 			return true;
 		}
@@ -68,7 +97,7 @@
 	};
 
 	const catchBtn = (btn) => {
-		btn.preventDefault();
+		// btn.preventDefault();
 		if (!keyPressInterceptor(btn)) {
 			terminalInputBuffer += btn.key;
 		}
@@ -84,6 +113,9 @@
 	});
 </script>
 
+{#if scanlinesOn}
+	<Scanlines />
+{/if}
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="display" on:click={catchFocus} on:focus={catchFocus}>
 	<div>
@@ -102,6 +134,6 @@
 
 <style lang="scss">
 	.display {
-		margin: 1rem;
+		margin: 2rem;
 	}
 </style>

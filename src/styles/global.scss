@@ -10,6 +10,7 @@ body {
 		-1px 0 1px rgba(255, 0, 0, 1);
 	margin: 0;
 	height: 100vh;
+	font-size: 16px;
 }
 
 .h {
@@ -60,7 +61,6 @@ pre {
 }
 
 a {
-	text-decoration-line: unset;
 	color: rgba(51, 255, 0, 1);
 }
 
@@ -139,4 +139,12 @@ a {
 			overflow-y: auto;
 		}
 	}
+}
+
+button {
+	background-color: rgba(51, 255, 0, 1);
+	color: rgb(40, 40, 40);
+	border: none;
+	padding: 0.5rem 1rem;
+	cursor: pointer;
 }

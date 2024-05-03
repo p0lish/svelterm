@@ -27,7 +27,6 @@
 
 			const command = terminalInputBuffer.split(' ')[0];
 			const params = terminalInputBuffer.split(' ').slice(1);
-			console.log('params', content[params[0]]);
 
 			if (!commandLineInterCeptor(command, params)) {
 				TerminalBuffer = [`command not found: ${terminalInputBuffer}`];
@@ -74,7 +73,6 @@
 			});
 		},
 		load: (params) => {
-			console.log('params', params);
 			const SCP_Name = params[0].toUpperCase();
 			scpItem = content[SCP_Name];
 		}

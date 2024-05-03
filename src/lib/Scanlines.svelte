@@ -1,48 +1,86 @@
 <div class="scanlines" inert></div>
 
 <style lang="scss">
+	$scan-width: 2px;
+
+	// emulates a damage-your-eyes bad pre-2000 CRT screen ♥ (true, false)
+	$scan-crt: true;
+
+	// frames-per-second (should be > 1), only applies if $scan-crt: true;
+	$scan-fps: 60;
+
+	// scanline-color (rgba)
+	$scan-color: rgba(#000, 0.3);
+
+	// set z-index on 8, like in ♥ 8-bits ♥, or…
+	// set z-index on 2147483648 or more to enable scanlines on Chrome fullscreen (doesn't work in Firefox or IE);
+	$scan-z-index: 2147483648;
+
+	/* MOVING SCANLINE SETTINGS */
+
+	// moving scanline (true, false)
+	$scan-moving-line: true;
+
+	// opacity of the moving scanline
+	$scan-opacity: 0.75;
+
+	/* MIXINS */
+
+	// apply CRT animation: @include scan-crt($scan-crt);
+	@mixin scan-crt($scan-crt) {
+		@if $scan-crt == true {
+			animation: scanlines 1s steps($scan-fps) infinite;
+		} @else {
+			animation: none;
+		}
+	}
+
+	// apply CRT animation: @include scan-crt($scan-crt);
+	@mixin scan-moving($scan-moving-line) {
+		@if $scan-moving-line == true {
+			animation: scanline 6s linear infinite;
+		} @else {
+			animation: none;
+		}
+	}
+
+	/* CSS .scanlines CLASS */
+
 	.scanlines {
-		pointer-events: none;
-		top: 0;
-		bottom: 0;
-		position: fixed;
-		overflow: hidden;
-		width: 100%;
+		position: relative;
+		overflow: hidden; // only to animate the unique scanline
+
 		&:before,
 		&:after {
 			display: block;
 			pointer-events: none;
 			content: '';
-			position: absolute;
+			position: fixed;
 		}
+
+		// unique scanline travelling on the screen
 		&:before {
+			// position: absolute;
+			// bottom: 100%;
 			width: 100%;
-			height: 3px;
-			z-index: 2147483649;
-			background: rgba(0, 0, 0, 0.3);
-			opacity: 0.75;
-			-webkit-animation: scanline 6s linear infinite;
-			animation: scanline 6s linear infinite;
+			height: $scan-width * 1;
+			z-index: $scan-z-index + 1;
+			background: $scan-color;
+			opacity: $scan-opacity;
+			// animation: scanline 6s linear infinite;
+			@include scan-moving($scan-moving-line);
 		}
+
+		// the scanlines, so!
 		&:after {
 			top: 0;
 			right: 0;
 			bottom: 0;
 			left: 0;
-			z-index: 2147483648;
-			background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.2) 50%);
-			background-size: 100% 4px;
-			animation: scanlines 10s steps(60) infinite;
-		}
-		@keyframes scanline {
-			0% {
-				transform: translate3d(0, 200000%, 0);
-			}
-		}
-		@keyframes scanlines {
-			100% {
-				background-position: 0 50%;
-			}
+			z-index: $scan-z-index;
+			background: linear-gradient(to bottom, transparent 50%, $scan-color 51%);
+			background-size: 100% $scan-width * 2;
+			@include scan-crt($scan-crt);
 		}
 	}
 </style>

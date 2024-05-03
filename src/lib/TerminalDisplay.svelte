@@ -1,13 +1,9 @@
 <script>
-	export let TerminalBuffer = ['1', '2'];
-	export let prompt = '';
+	export let TerminalBuffer = [];
+	$: terminalText = TerminalBuffer.join('\n');
 </script>
 
-<div>
-	{#each TerminalBuffer as line, i}
-		<pre>{prompt}{line}</pre>
-	{/each}
-</div>
+<pre>{terminalText}{`\n\n`}</pre>
 
 <style>
 	pre {
