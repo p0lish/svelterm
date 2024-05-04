@@ -7,6 +7,8 @@
 	let threadIsLive = false;
 	let filterString = '';
 	let autoRefreshStopper = () => {};
+	let lastUpdated = 'n/a';
+
 	$: board = $page.params.board;
 	$: threads = [];
 	$: allString = '';
@@ -23,10 +25,6 @@
 		return new Date(epoch * 1000).toUTCString();
 	};
 
-	const orderByLastModified = (a, b) => {
-		return a.last_modified - b.last_modified;
-	};
-
 	const reverseOrderByLastModified = (a, b) => {
 		return b.last_modified - a.last_modified;
 	};
@@ -36,7 +34,7 @@
 		const data = await response.json();
 		threads = data.flat().sort(reverseOrderByLastModified);
 		allString = data.map((thread) => thread.com).join(' ');
-		console.log('allString', allString);
+		lastUpdated = new Date().toLocaleString();
 	};
 
 	const autoRefresh = () => {
@@ -49,14 +47,11 @@
 
 	onMount(() => {
 		getCatalogs();
-		// const interval = setInterval(() => {
-		// 	getCatalogs();
-		// }, 10000);
-		// return () => clearInterval(interval);
 	});
 </script>
 
 <div class="flex">
+	<a class="button" target="_blank" href="/"> back </a>
 	<FilterInput bind:text={filterString} />
 	{#if threadIsLive}
 		<button
@@ -73,10 +68,11 @@
 		>
 	{/if}
 </div>
-<div>
+<div class="margin-1rem">
 	{#if allString}
 		<WordFreq {allString} setSearchText={(word) => (filterString = word)} />
 	{/if}
+	<p>last updated: {lastUpdated}</p>
 </div>
 
 <ul>
@@ -98,7 +94,7 @@
 		padding: 0;
 
 		li {
-			margin: 1rem;
+			margin: 1rem 0;
 			padding: 1rem;
 			border: 1px solid rgba(51, 255, 0, 1);
 		}

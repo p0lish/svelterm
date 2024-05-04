@@ -17,9 +17,10 @@
 	});
 </script>
 
+<h1 class="center">4CHAN watcher</h1>
 <div class="flex wrap">
 	{#each boards as board}
-		<a href={board.board}>{board.board}</a>
+		<a href={board.board}>{board.title}</a>
 	{/each}
 </div>
 
@@ -30,9 +31,11 @@
 		font-weight: bold;
 		margin: 0.4rem;
 		padding: 0.4rem;
-		min-width: 4rem;
 	}
 	.wrap {
 		flex-wrap: wrap;
+	}
+	.center {
+		text-align: center;
 	}
 </style>

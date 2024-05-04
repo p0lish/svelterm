@@ -154,7 +154,7 @@
 	const highestWords = pickHighest(wordCounts, 20);
 </script>
 
-<h2>top 20 words</h2>
+<p class="margin-mb-1">top words</p>
 <div>
 	{#each Object.keys(highestWords) as word}
 		<button

@@ -5,19 +5,26 @@
 	import WordFreq from '$lib/WordFreq.svelte';
 
 	const chanURL = 'https://boards.4chan.org';
-	const threadIsLive = false;
+	let threadIsLive = false;
+	let autoRefreshStopper = () => {};
+	let filterString = '';
+	let lastUpdated = 'n/a';
+
 	$: board = $page.params.board;
 	$: thread = $page.params.thread;
 	$: posts = [];
-	$: newest = posts.sort(reverseOrderByLastModified)[0];
 	$: allString = '';
+
+	$: filteredPosts = posts.filter((post) => {
+		const filterstrings = filterString.split(' ');
+		return (
+			post?.com?.toLowerCase().includes(filterString.toLowerCase()) ||
+			filterstrings.every((filter) => post?.com?.toLowerCase().includes(filter.toLowerCase()))
+		);
+	});
 
 	const dateFromEpoch = (epoch) => {
 		return new Date(epoch * 1000).toUTCString();
-	};
-
-	const reverseOrderByLastModified = (a, b) => {
-		return b.last_modified - a.last_modified;
 	};
 
 	const getPosts = () => {
@@ -26,46 +33,68 @@
 			.then((data) => {
 				allString = data.map((thread) => thread.com).join(' ');
 				posts = data;
+				lastUpdated = new Date().toLocaleString();
 			});
+	};
+
+	const autoRefresh = () => {
+		threadIsLive = true;
+		const interval = setInterval(() => {
+			getPosts();
+		}, 10000);
+		return () => clearInterval(interval);
 	};
 
 	onMount(() => {
 		getPosts();
-		// const interval = setInterval(() => {
-		// 	getCatalogs();
-		// }, 10000);
-		// return () => clearInterval(interval);
 	});
 </script>
 
-<FilterInput />
-<a target="_blank" href={`${chanURL}/${board}/thread/${thread}`}>go to thread</a>
-<div>
-	{#if allString}
-		<WordFreq {allString} />
+<div class="flex">
+	<a class="button" target="_blank" href={`/${board}`}> back </a>
+	<FilterInput bind:text={filterString} />
+	{#if threadIsLive}
+		<button
+			on:click={() => {
+				threadIsLive = false;
+				autoRefreshStopper();
+			}}>Stop auto refresh</button
+		>
+	{:else}
+		<button
+			on:click={() => {
+				autoRefreshStopper = autoRefresh();
+			}}>Auto refresh</button
+		>
 	{/if}
+	<a class="button" target="_blank" href={`${chanURL}/${board}/thread/${thread}`}>go to thread</a>
 </div>
-
-<ul>
-	{#each posts as post}
-		<li id={`p${post.no}`}>
-			{post.no}
-			{post.name}
-			{dateFromEpoch(post.time)}
-			<br />
-			{@html post.com || ''}
-		</li>
-	{/each}
-</ul>
+<div class="margin-1rem">
+	{#if allString}
+		<WordFreq {allString} setSearchText={(word) => (filterString = word)} />
+	{/if}
+	<p>last updated: {lastUpdated}</p>
+	<ul>
+		{#each filteredPosts as post}
+			<li id={`p${post.no}`}>
+				{post.no}
+				{post.name}
+				{dateFromEpoch(post.time)}
+				<br />
+				{@html post.com || ''}
+			</li>
+		{/each}
+	</ul>
+</div>
 
 <style lang="scss">
 	ul {
 		list-style-type: none;
-		margin: 1rem;
+		margin: 0arem;
 		padding: 0;
 
 		li {
-			margin: 1rem;
+			margin: 1rem 0;
 			padding: 1rem;
 			border: 1px solid rgba(51, 255, 0, 1);
 		}

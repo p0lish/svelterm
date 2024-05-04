@@ -141,10 +141,29 @@ a {
 	}
 }
 
-button {
-	background-color: rgba(51, 255, 0, 1);
-	color: rgb(40, 40, 40);
-	border: none;
+button,
+a.button {
+	border: 1px solid rgba(51, 255, 0, 1);
+	color: rgba(51, 255, 0, 1);
+	background-color: unset;
 	padding: 0.5rem 1rem;
 	cursor: pointer;
+	text-decoration: none;
+}
+
+a.button {
+	display: flex;
+	align-items: center;
+}
+
+.margin {
+	&-1rem {
+		margin: 1rem;
+	}
+
+	&-mb {
+		&-1 {
+			margin-bottom: 1rem;
+		}
+	}
 }
