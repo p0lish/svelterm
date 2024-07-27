@@ -1,13 +1,8 @@
+$text-color: white;
 body {
 	font-family: monospace;
 	background-color: rgb(40, 40, 40);
-	background: rgb(40, 40, 40),
-		linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-	color: rgba(51, 255, 0, 1);
-	text-shadow:
-		0 0 0.5rem rgba(51, 255, 0, 1),
-		2px 0 1px rgba(0, 0, 255, 1),
-		-1px 0 1px rgba(255, 0, 0, 1);
+	color: $text-color;
 	margin: 0;
 	height: 100vh;
 	font-size: 16px;
@@ -61,7 +56,7 @@ pre {
 }
 
 a {
-	color: rgba(51, 255, 0, 1);
+	color: $text-color;
 }
 
 ::selection {
@@ -143,8 +138,8 @@ a {
 
 button,
 a.button {
-	border: 1px solid rgba(51, 255, 0, 1);
-	color: rgba(51, 255, 0, 1);
+	border: 1px solid $text-color;
+	color: $text-color;
 	background-color: unset;
 	padding: 0.5rem 1rem;
 	cursor: pointer;

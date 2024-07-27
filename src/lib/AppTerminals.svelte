@@ -134,7 +134,6 @@
 
 <style>
 	section {
-		border: 1px solid #00ff00;
 		font-family: monospace;
 		font-size: 1.2em;
 		overflow-y: auto;

@@ -11,7 +11,7 @@
 	input {
 		width: 100%;
 		padding: 0.5rem;
-		border: 1px solid rgba(51, 255, 0, 1);
+		border: 1px solid grey;
 
 		background-color: inherit;
 		color: inherit;

@@ -186,7 +186,7 @@
 
 <style>
 	section {
-		border: 1px solid #00ff00;
+		border: 1px solid grey;
 		font-family: monospace;
 		font-size: 1.2em;
 		overflow-y: auto;

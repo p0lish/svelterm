@@ -96,7 +96,7 @@
 		li {
 			margin: 1rem 0;
 			padding: 1rem;
-			border: 1px solid rgba(51, 255, 0, 1);
+			border: 1px solid gray;
 		}
 	}
 </style>

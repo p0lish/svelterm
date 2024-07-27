@@ -168,7 +168,7 @@
 
 <style>
 	.tag {
-		border: 1px solid rgba(51, 255, 0, 0.5);
+		border: 1px solid grey;
 		padding: 0.5rem;
 		margin: 0rem;
 		background: none;

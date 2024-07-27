@@ -27,7 +27,7 @@
 <style lang="scss">
 	a {
 		background: inherit;
-		border: 2px solid green;
+		border: 2px solid gray;
 		font-weight: bold;
 		margin: 0.4rem;
 		padding: 0.4rem;

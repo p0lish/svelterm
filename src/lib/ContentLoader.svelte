@@ -52,9 +52,7 @@
 		background: none;
 		color: inherit;
 
-		&:focus {
-			border: 1px solid #00ff00;
-		}
+		
 	}
 	#page {
 		margin: 1rem;
